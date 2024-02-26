@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package p2p;
+
+// The gRPC service definition for file operations.
+service FileService {
+  // Sends a request for downloading a file's URL
+  rpc DownloadFile(DownloadRequest) returns (DownloadResponse);
+}
+
+// The request message containing the file's name.
+message DownloadRequest {
+  string file_name = 1;
+}
+
+// The response message containing the file's URL.
+message DownloadResponse {
+  string file_url = 1;
+}
