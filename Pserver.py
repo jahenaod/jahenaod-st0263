@@ -5,12 +5,16 @@ import p2p_pb2
 import p2p_pb2_grpc
 from flask import Flask
 import time
+import dotenv
 
 app = Flask(__name__)
 files = {}
 
 import json
 import os
+
+GRCP_SERVER_IP = os.getenv('GRCP_SERVER_URL', 'localhost')
+GRCP_SERVER_PORT1 = os.getenv('GRCP_SERVER_PORT', '5001')
 
 class FileService(p2p_pb2_grpc.FileServiceServicer):
     def DownloadFile(self, request, context):
@@ -35,7 +39,7 @@ class FileService(p2p_pb2_grpc.FileServiceServicer):
 def serve_grpc():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     p2p_pb2_grpc.add_FileServiceServicer_to_server(FileService(), server)
-    server.add_insecure_port('localhost:5001')
+    server.add_insecure_port(f"{GRCP_SERVER_IP}: {GRCP_SERVER_PORT1}")
     server.start()
     try:
         while True:
