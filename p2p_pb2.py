@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tp2p.proto\x12\x03p2p\"$\n\x0f\x44ownloadRequest\x12\x11\n\tfile_name\x18\x01 \x01(\t\"$\n\x10\x44ownloadResponse\x12\x10\n\x08\x66ile_url\x18\x01 \x01(\t2J\n\x0b\x46ileService\x12;\n\x0c\x44ownloadFile\x12\x14.p2p.DownloadRequest\x1a\x15.p2p.DownloadResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tp2p.proto\x12\x03p2p\"$\n\x0f\x44ownloadRequest\x12\x11\n\tfile_name\x18\x01 \x01(\t\"$\n\x10\x44ownloadResponse\x12\x10\n\x08\x66ile_url\x18\x01 \x01(\t\"\x12\n\x10ListFilesRequest\"1\n\x11ListFilesResponse\x12\x1c\n\x05\x66iles\x18\x01 \x03(\x0b\x32\r.p2p.FileInfo\"B\n\x08\x46ileInfo\x12\x11\n\tfile_name\x18\x01 \x01(\t\x12\x10\n\x08\x66ile_url\x18\x02 \x01(\t\x12\x11\n\tpeer_name\x18\x03 \x01(\t2\x86\x01\n\x0b\x46ileService\x12;\n\x0c\x44ownloadFile\x12\x14.p2p.DownloadRequest\x1a\x15.p2p.DownloadResponse\x12:\n\tListFiles\x12\x15.p2p.ListFilesRequest\x1a\x16.p2p.ListFilesResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,6 +25,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_DOWNLOADREQUEST']._serialized_end=54
   _globals['_DOWNLOADRESPONSE']._serialized_start=56
   _globals['_DOWNLOADRESPONSE']._serialized_end=92
-  _globals['_FILESERVICE']._serialized_start=94
-  _globals['_FILESERVICE']._serialized_end=168
+  _globals['_LISTFILESREQUEST']._serialized_start=94
+  _globals['_LISTFILESREQUEST']._serialized_end=112
+  _globals['_LISTFILESRESPONSE']._serialized_start=114
+  _globals['_LISTFILESRESPONSE']._serialized_end=163
+  _globals['_FILEINFO']._serialized_start=165
+  _globals['_FILEINFO']._serialized_end=231
+  _globals['_FILESERVICE']._serialized_start=234
+  _globals['_FILESERVICE']._serialized_end=368
 # @@protoc_insertion_point(module_scope)

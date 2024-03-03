@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 app = Flask(__name__)
 
 users = {}
-files = {}
+#files = {}
 peers = {}
 
 SERVER_IP = os.getenv('SERVER_URL', 'localhost')
+SERVER_PORT = os.getenv('SERVER_PORT', '4001')
 
 @app.route('/')
 def index():
@@ -46,7 +47,7 @@ def login():
 
 import json
 
-def update_files_db(file_name, file_url):
+def update_files_db(file_name, file_url, name_peer):
     db_path = 'files_db.json'
     files = {}
     if os.path.exists(db_path):
@@ -56,7 +57,7 @@ def update_files_db(file_name, file_url):
             except json.JSONDecodeError:
                 pass  # El archivo está vacío o corrupto, se iniciará como vacío.
 
-    files[file_name] = file_url
+    files[file_name] = {'url': file_url, 'peer': name_peer}
 
     with open(db_path, 'w') as f:
         json.dump(files, f)
@@ -87,4 +88,4 @@ def list_peers():
 
 
 if __name__ == "__main__":
-    app.run(host=SERVER_IP, port=4001, debug=True)
+    app.run(host=SERVER_IP, port=SERVER_PORT, debug=True)

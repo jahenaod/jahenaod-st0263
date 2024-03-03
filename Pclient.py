@@ -49,6 +49,18 @@ def list_peers():
     response = requests.get(f"http://{SERVER_IP}:{SERVER_PORT}/listPeers")
     print(response.json())
 
+def list_files_grcp():
+  with grpc.insecure_channel(f'{GRCP_SERVER_IP}:{GRCP_SERVER_PORT1}') as channel:
+        stub = p2p_pb2_grpc.FileServiceStub(channel)
+        try:
+            # Enviar una solicitud vacía de ListFilesRequest
+            response = stub.ListFiles(p2p_pb2.ListFilesRequest())
+            # Procesar la respuesta
+            for file_info in response.files:
+                print(f"File Name: {file_info.file_name}, URL: {file_info.file_url}, Peer Name: {file_info.peer_name}")
+        except grpc.RpcError as e:
+            print(f"gRPC error: {e.details()}")
+
 if __name__ == "__main__":
     login_peer()
     while True:
@@ -56,7 +68,8 @@ if __name__ == "__main__":
         print("1. Download file with gRPC")
         print("2. Upload file with HTTP")
         print("3. List peers")
-        print("4. Exit")
+        print("4. List file")
+        print("5. Exit")
         choice = input("Enter choice: ")
         if choice == "1":
             file_name = input("Enter file name to download: ")
@@ -69,4 +82,6 @@ if __name__ == "__main__":
         elif choice == "3":
             list_peers() 
         elif choice == "4":
+            list_files_grcp()
+        elif choice == "5":
             break
