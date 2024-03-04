@@ -5,6 +5,7 @@ import p2p_pb2
 import p2p_pb2_grpc
 import os
 import dotenv
+import socket
 
 SERVER_IP = os.getenv('SERVER_URL', 'localhost')
 SERVER_PORT = os.getenv('SERVER_PORT', '4001')
@@ -31,7 +32,6 @@ def login_peer():
             response = login_peer(pclient_data)
         print(f"Logged in as {username}")
 
-
 def download_file_grpc(file_name):
     with grpc.insecure_channel(f'{GRCP_SERVER_IP}:{GRCP_SERVER_PORT1}') as channel:
         stub = p2p_pb2_grpc.FileServiceStub(channel)
@@ -57,9 +57,22 @@ def list_files_grcp():
             response = stub.ListFiles(p2p_pb2.ListFilesRequest())
             # Procesar la respuesta
             for file_info in response.files:
-                print(f"File Name: {file_info.file_name}, URL: {file_info.file_url}, Peer Name: {file_info.peer_name}")
+                print(f"File Name: {file_info.file_name}, URL: {file_info.file_url}, Username: {file_info.peer_name}")
         except grpc.RpcError as e:
             print(f"gRPC error: {e.details()}")
+
+def connect_to_peer(host, port):
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((host, int(port)))
+    #client_socket.sendall(message.encode())
+    
+    received_data = client_socket.recv(1024)
+    print("Received:", received_data.decode())
+    
+    client_socket.close()
+
+# Ejemplo de uso
+# connect_to_peer('127.0.0.1', 5002, "Hello, peer!")
 
 if __name__ == "__main__":
     login_peer()
@@ -69,7 +82,8 @@ if __name__ == "__main__":
         print("2. Upload file with HTTP")
         print("3. List peers")
         print("4. List file")
-        print("5. Exit")
+        print("5. connect to peer")
+        print("6. exit")
         choice = input("Enter choice: ")
         if choice == "1":
             file_name = input("Enter file name to download: ")
@@ -84,4 +98,9 @@ if __name__ == "__main__":
         elif choice == "4":
             list_files_grcp()
         elif choice == "5":
+            input("Which username? :")
+            host = input("Whose host? :")
+            port = input("Which port? : ")
+            connect_to_peer(host,int(port))
+        elif choice == "6":
             break
