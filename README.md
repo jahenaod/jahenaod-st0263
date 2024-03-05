@@ -33,7 +33,7 @@ El sistema permite a los peers compartir índices o listados de los archivos dis
 - Se aplicó el patrón MVC "Modelo Vista Controlador", distinguiendo claramente las responsabilidades: el modelo (gestión de datos mediante SQLAlchemy), la vista (creación de la interfaz de usuario y servicios REST), y el controlador (desarrollo de la lógica de negocio y servicios gRPC).
 - Se empleó el patrón DAO "Data Access Object" con SQLAlchemy para gestionar las interacciones con la base de datos, permitiendo así aislar la lógica de acceso a datos del resto del código.
 
-Imagen de la arquitectura
+![Imagen de la arquitectura](https://github.com/jahenaod/jahenaod-st0263/blob/main/Arquitectura%20TI.jpg)
 
 # 3. Descripción del ambiente de desarrollo y técnico: lenguaje de programación, librerias, paquetes, etc, con sus numeros de versiones.
 
