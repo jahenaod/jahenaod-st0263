@@ -18,6 +18,7 @@ message DownloadRequest {
 // The response message containing the file's URL.
 message DownloadResponse {
   string file_url = 1;
+  string peer_owner = 2;
 }
 
 // Define request and response messages for ListFiles

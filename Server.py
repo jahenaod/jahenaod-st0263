@@ -114,9 +114,16 @@ def list_files():
 @app.route('/download', methods=['GET'])
 def download():
     file_name = request.args.get('file_name')
-    if file_name in files:
-        return jsonify({"file_url": files[file_name]}), 200
-    return jsonify({"message": "File not found"}), 404
+    # Busca el archivo por su nombre
+    file = File.query.filter_by(file_name=file_name).first()
+    if file:
+        # Si el archivo existe, devuelve la URL para descargarlo
+        return jsonify({"file_url": file.url,
+                        "Peer Owner": file.username }), 200
+    else:
+        # Si el archivo no se encuentra, devuelve un mensaje de error
+        return jsonify({"message": "File not found"}), 404
+
 
 @app.route('/listPeers', methods=['GET'])
 def list_peers():

@@ -12,16 +12,11 @@ from Server import db, File, Peer
 from flask_sqlalchemy import SQLAlchemy
 import requests
 
-#app = Flask(__name__)
+
 files = {}
 
 import json
 import os
-
-#DATABASE_FILE = 'p2p_network.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE_FILE
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#db = SQLAlchemy(app)
 
 DATABASE_FILE = 'sqlite:///p2p_network.db'
 
@@ -30,23 +25,31 @@ GRCP_SERVER_PORT1 = os.getenv('GRCP_SERVER_PORT', '5001')
 
 class FileService(p2p_pb2_grpc.FileServiceServicer):
     def DownloadFile(self, request, context):
-        db_path = 'files_db.json'
-        file_name = request.file_name
-        files = {}
-        
-        if os.path.exists(db_path):
-            with open(db_path, 'r') as f:
-                try:
-                    files = json.load(f)
-                except json.JSONDecodeError:
-                    pass  # El archivo está vacío o corrupto, se manejará como vacío.
+                 # Construye la URL del endpoint de Flask, incluyendo el nombre del archivo como parámetro
+        flask_endpoint = f"http://localhost:4001/download?file_name={request.file_name}"
+        try:
+            # Realiza la solicitud GET al endpoint de Flask
+            response = requests.get(flask_endpoint)
+            
+            # Verifica si la solicitud fue exitosa
+            if response.status_code == 200:
+                # Obtiene la URL del archivo de la respuesta
+                file_url = response.json().get('file_url')
+                peer_owner = response.json().get('Peer Owner')
+                if file_url:
+                    # Devuelve la URL del archivo en la respuesta de gRPC
+                    return p2p_pb2.DownloadResponse(file_url=file_url, peer_owner=peer_owner)
+                else:
+                    # Si no se encuentra la URL del archivo, aborta con un estado de "no encontrado"
+                    context.abort(grpc.StatusCode.NOT_FOUND, "File URL not found in the response")
+            else:
+                # Si el estado de la respuesta no es 200, aborta con un estado interno
+                context.abort(grpc.StatusCode.INTERNAL, "Internal error occurred while calling Flask endpoint")
+        except Exception as e:
+            # Maneja excepciones generales, como problemas de red
+            context.abort(grpc.StatusCode.INTERNAL, f"Exception occurred: {str(e)}")
 
-        file_url = files.get(file_name)
-        if file_url:
-            return p2p_pb2.DownloadResponse(file_url=file_url)
-        else:
-            context.abort(grpc.StatusCode.NOT_FOUND, "File not found")
-    
+
     def ListFiles(self, request, context):
         # URL del endpoint de Flask
         flask_endpoint = 'http://localhost:4001/listFiles'
